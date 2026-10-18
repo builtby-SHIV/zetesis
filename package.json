@@ -1,0 +1,19 @@
+{
+  "name": "zetesis",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^26.6.5",
+    "tsx": "^4.23.15"
+  },
+  "peerDependencies": {
+    "typescript": "^7"
+  }
+}
