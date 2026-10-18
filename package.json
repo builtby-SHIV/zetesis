@@ -17,6 +17,8 @@
     "typescript": "^7"
   },
   "dependencies": {
-    "docmarrow": "^1.1.1"
+    "@google/genai": "^2.30.0",
+    "docmarrow": "^1.1.1",
+    "dotenv": "^18.0.8"
   }
 }
