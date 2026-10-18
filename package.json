@@ -15,5 +15,8 @@
   },
   "peerDependencies": {
     "typescript": "^7"
+  },
+  "dependencies": {
+    "docmarrow": "^1.1.1"
   }
 }
