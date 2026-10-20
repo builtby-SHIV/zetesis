@@ -69,7 +69,7 @@ export async function processPdfDocument(filePath: string): Promise<ProcessPdfRe
 }
 
 async function main() {
-    const filePath = process.argv[2] || 'sample3.pdf';
+    const filePath = process.argv[2] || 'sample8.pdf';
     console.log(`\n======================================================`);
     console.log(`Processing PDF: ${filePath}`);
     console.log(`Tokenizer: BAAI/bge-small-en-v1.5 (Context Limit: ${BGE_MODEL_LIMIT})`);

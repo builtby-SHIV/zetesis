@@ -123,10 +123,9 @@ export function cleanPdfText(rawText: string): string {
     return cleaned.filter(Boolean).join('\n\n');
 }
 
-export const normalizePdfText = cleanPdfText;
-
-function extractChildUnits(text: string): Array<{ text: string; isList: boolean }> {
+function extractChildUnits(text: string) {
     const blocks = text.split(/\n\n+/).filter(Boolean);
+    
     const units: Array<{ text: string; isList: boolean }> = [];
 
     for (const block of blocks) {
@@ -138,6 +137,7 @@ function extractChildUnits(text: string): Array<{ text: string; isList: boolean 
             if (currentTextLines.length === 0) 
                 return;
             const joined = currentTextLines.join(' ');
+            // console.log(joined)
             const sents = splitIntoSentences(joined);
             for (const s of sents) {
                 units.push({ text: s, isList: false });
@@ -191,15 +191,14 @@ export async function chunkDoc(rawText: string, metaData: Record<string, any> = 
 
     function flushParent() {
         if (currentParent.trim()) {
-        parentGroups.push(currentParent.trim());
-        currentParent = '';
+            parentGroups.push(currentParent.trim());
+            currentParent = '';
         }
     }
 
     for (const block of blocks) {
         const blockTokens = countTokens(block, tokenizer);
-        console.log(blockTokens)
-
+        console.log(currentParent)
         if (blockTokens > maxParentTokens) {
             flushParent();
             const subUnits = block.split(/\n/).filter(Boolean);
@@ -282,19 +281,18 @@ export async function chunkDoc(rawText: string, metaData: Record<string, any> = 
 
             const freshCandidate = currentChild ? `${currentChild}\n\n${unit.text}` : unit.text;
             if (countTokens(freshCandidate, tokenizer) <= maxChildTokens) {
-            currentChild = freshCandidate;
+                currentChild = freshCandidate;
             } else {
-
-            const items = unit.text.split('\n');
-            for (const item of items) {
-                const itemCand = currentChild ? `${currentChild}\n${item}` : item;
-                if (countTokens(itemCand, tokenizer) > maxChildTokens && currentChild) {
-                    flushChild();
-                    currentChild = item;
-                } else {
-                    currentChild = itemCand;
+                const items = unit.text.split('\n');
+                for (const item of items) {
+                    const itemCand = currentChild ? `${currentChild}\n${item}` : item;
+                    if (countTokens(itemCand, tokenizer) > maxChildTokens && currentChild) {
+                        flushChild();
+                        currentChild = item;
+                    } else {
+                        currentChild = itemCand;
+                    }
                 }
-            }
             }
         } else {
             const candidate = currentChild ? `${currentChild} ${unit.text}` : unit.text;
